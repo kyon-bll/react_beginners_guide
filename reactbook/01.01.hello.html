@@ -5,16 +5,25 @@
     <meta charset="utf-8">
   </head>
   <body>
-    <div id="app">
+    <div id="app" class="kyon">
+      タグの内側が全部置き換わるっぽい。つまり、この文字列も消える。
       <!-- my app renders here -->
     </div>
     <script src="react/build/react.js"></script>
     <script src="react/build/react-dom.js"></script>
     <script>
-      /* ReactDOM.render(
-       *   React.DOM.h1(null, "Hello world!"),
-       *   document.getElementById("app")
-       * );*/
+      ReactDOM.render(
+        React.DOM.h1(null, "Hello world! by kyon"),/* h1 コンポーネントにテキストコンポーネントが子コンポーネントとして追加されている */
+        document.getElementById("app")
+      );
+    </script>
+    <!-- address コンポーネント使ってみた -->
+    <div id="address"></div>
+    <script>
+      ReactDOM.render(
+        React.DOM.address(null, "Hello world! by kyon"),/* h1コンポーネントにテキストコンポーネントが子コンポーネントとして追加されている */
+        document.getElementById("address")
+      );
     </script>
   </body>
 </html>
