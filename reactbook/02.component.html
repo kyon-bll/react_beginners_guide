@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>hello React</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+
+    <div id="app" class="kyon">
+      タグの内側が全部置き換わるっぽい。つまり、この文字列も消える。
+      エラーがあると、文字列がのこる。
+      <!-- my app renders here -->
+    </div>
+
+    <script src="react/build/react.js"></script>
+    <script src="react/build/react-dom.js"></script>
+    
+    <script>
+      /* コンポーネントの定義 */
+      var Component = React.createClass({
+        render: function() {
+          return React.DOM.span(null, "カスタムコンポーネント");
+        }
+      });
+
+      /* コンポーネントの使用 */
+      ReactDOM.render(
+        React.createElement(Component),
+        document.getElementById("app")
+      );
+
+      /* ファクトリー経由でのコンポーネントの使用 */
+      var Component = React.createClass({
+        render: function() {
+          return React.DOM.span(null, "カスタムコンポーネント by ふぁくとりー");
+        }
+      });
+
+      var ComponentFactory = React.createFactory(Component)
+      ReactDOM.render(
+        ComponentFactory(),
+        document.getElementById("app")
+      );
+
+      /* 
+         createElementでのコンポーネントの作成
+         React.DOM.* は内部で createElement に引数を渡している
+       */
+      ReactDOM.render(
+        React.createElement("span", null, "Hello"),
+        document.getElementById("app")
+      );
+
+      /* コンポーネントにプロパティを渡す */
+      var Component = React.createClass({
+        render: function() {
+          return React.DOM.span(null, "私は" + this.props.name + "です" + this.props.kyon);
+        }
+      });
+      ReactDOM.render(
+        React.createElement(Component, {
+          name: "ボブ",
+          kyon: "きょん",
+        }),
+        document.getElementById("app")
+      );
+
+      /* propTypes プロパティの型ちぇっくとかできる。 型チェックの結果はブラウザの console で見れる */
+      var Component = React.createClass({
+        propTypes: {
+          name: React.PropTypes.string.isRequired,
+        },
+        render: function() {
+          return React.DOM.span(null, "私は" + this.props.name + "です");
+        }
+      });
+      ReactDOM.render(
+        React.createElement(Component, {
+          name: "ボブ",
+          /*           name: 123,*/
+        }),
+        document.getElementById("app")
+      );
+
+
+    </script>
+  </body>
+</html>
