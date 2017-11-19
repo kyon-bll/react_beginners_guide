@@ -13,9 +13,23 @@
     <script src="react/build/react-dom.js"></script>
     <script>
       ReactDOM.render(
-        React.DOM.h1(null, "Hello world! by kyon"),/* h1 コンポーネントにテキストコンポーネントが子コンポーネントとして追加されている */
+        React.DOM.h1(
+          {id: 'kyon-heading'},
+          React.DOM.span(
+            null,
+            React.DOM.em(null, "Yeah!!!"),
+          ),
+          " Hello world! by kyon"
+        ),/* h1 コンポーネントに各コンポーネントが子コンポーネントとして追加されている */
         document.getElementById("app")
       );
+      /* JSXだと以下のように書ける */
+      /* ReactDOM.render(
+         <h1 id="my-heading">
+         <span><em>Hell</em>o</span> world!
+         </h1>,
+         document.getElementById("app")
+         ); */
     </script>
     <!-- address コンポーネント使ってみた -->
     <div id="address"></div>
