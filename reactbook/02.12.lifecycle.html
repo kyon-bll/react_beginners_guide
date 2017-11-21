@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>hello React</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+
+    <div id="app" class="kyon">
+      タグの内側が全部置き換わるっぽい。つまり、この文字列も消える。
+      <!-- my app renders here -->
+    </div>
+
+    <script src="react/build/react.js"></script>
+    <script src="react/build/react-dom.js"></script>
+    
+    <script>
+      /* 後でつかわれる mixin */
+      var logMixin = {
+        _log: function(methodName, args) {
+          console.log(this.name + '::' + methodName, args);
+        },
+        componentWillUpdate:  function() {this._log('componentWillUpdate',  arguments);},
+        /* componentDidUpdate:   function() {this._log('componentDidUpdate',   arguments);},*/
+        /* 3文字以上にできないようにしてる and Counter コンポーネントには、text がないから、コンソールでエラーはく */
+        componentDidUpdate:   function(oldProps, oldState) {
+          if (this.state.text.length > 3) {
+            console.log('The text is too long, abort, abort!');
+            this.replaceState(oldState);
+          }
+        },
+        
+        componentWillMount:   function() {this._log('componentWillMount',   arguments);},
+        componentDidMount:    function() {this._log('componentDidMount',    arguments);},
+        componentWillUnmount: function() {this._log('componentWillUnmount', arguments);},
+      };
+
+      /* 子コンポーネントの使用 */
+      var Counter = React.createClass({
+        name: 'Counter',
+        mixins: [logMixin],
+        propTypes: {
+          count: React.PropTypes.number.isRequired,
+        },
+        render: function() {
+          return React.DOM.span(null, this.props.count);
+        }
+      });
+
+      /* ステートを持たせる */
+      var TextAreaCounter = React.createClass({
+        /* log mixin を使用 */
+        name: 'TextAreaCounter',
+        mixins: [logMixin],
+        
+        propTypes: {
+          defaultValue: React.PropTypes.string,
+        },
+
+        /* 初期ステートを取得(？) */
+        getInitialState: function() {
+          return {
+            text: this.props.defaultValue,
+          };
+        },
+        /* ステートの更新 */
+        _textChange: function(ev) {
+          this.setState({
+            text: ev.target.value,
+          });
+        },
+
+        /* 外部からのプロパティの変更に対処 */
+        componentWillReceiveProps: function(newProps) {
+          this.setState({
+            text: newProps.defaultValue,
+          });
+        },
+
+        /* 
+           this.props -> this.state に変更
+           イベントリスナーを設定
+         */
+        render: function() {
+          var counter = null;
+          if (this.state.text.length > 0) {
+            counter = React.DOM.h3(null, 
+              React.createElement(Counter, {
+                count: this.state.text.length,
+              })
+            );
+          }
+          return React.DOM.div(
+            null,
+            React.DOM.textarea({
+              value: this.state.text,
+              onChange: this._textChange,
+            }),
+            counter
+          );
+        }
+      });
+
+      /* 外部からアクセスできるように */
+      var myTextAreaCounter = ReactDOM.render(
+        React.createElement(TextAreaCounter, {
+          defaultValue: "きょん",
+        }),
+        document.getElementById("app")
+      );
+
+      
+    </script>
+  </body>
+</html>
