@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>hello React</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+
+    <div id="app" class="kyon">
+      タグの内側が全部置き換わるっぽい。つまり、この文字列も消える。
+      <!-- my app renders here -->
+    </div>
+
+    <script src="react/build/react.js"></script>
+    <script src="react/build/react-dom.js"></script>
+    
+    <script>
+      /* ステートレスな実装 */
+      /* var TextAreaCounter = React.createClass({
+       *   propTypes: {
+       *     text: React.PropTypes.string,
+       *   },
+       *   getDefaultProps: function() {
+       *     return {
+       *       text: '',
+       *     };
+       *   },
+       *   render: function() {
+       *     return React.DOM.div(
+       *       null,
+       *       React.DOM.textarea({
+       *         defaultValue: this.props.text,
+       *       }),
+       *       React.DOM.h3(null, this.props.text.length)
+       *     );
+       *   }
+       * });*/
+
+      /* ステートを持たせる */
+      var TextAreaCounter = React.createClass({
+        propTypes: {
+          defaultValue: React.PropTypes.string,
+        },
+
+        /* 初期ステートを取得(？) */
+        getInitialState: function() {
+          return {
+            text: this.props.defaultValue,
+          };
+        },
+        /* ステートの更新 */
+        _textChange: function(ev) {
+          this.setState({
+            text: ev.target.value,
+          });
+        },
+
+        /* 外部からのプロパティの変更に対処*/
+        componentWillReceiveProps: function(newProps) {
+          this.setState({
+            text: newProps.defaultValue,
+          });
+        },
+
+        /* 
+           this.props -> this.state に変更
+           イベントリスナーを設定
+         */
+        render: function() {
+          return React.DOM.div(
+            null,
+            React.DOM.textarea({
+              value: this.state.text,
+              onChange: this._textChange,
+            }),
+            React.DOM.h3(null, this.state.text.length)
+          );
+        }
+      });
+
+      /* 外部からアクセスできるように */
+      var myTextAreaCounter = ReactDOM.render(
+        React.createElement(TextAreaCounter, {
+          defaultValue: "きょん",
+        }),
+        document.getElementById("app")
+      );
+
+      
+    </script>
+  </body>
+</html>
